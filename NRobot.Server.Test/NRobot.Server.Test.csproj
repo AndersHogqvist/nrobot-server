@@ -6,7 +6,8 @@
     <Company>NRobot</Company>
     <Product>NRobot.Server.Test</Product>
     <Copyright>Copyright 2016</Copyright>
-    <AssemblyVersion>1.0.0.%2a</AssemblyVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <AssemblyFileVersion>1.0.0.0</AssemblyFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>..\build\</OutputPath>

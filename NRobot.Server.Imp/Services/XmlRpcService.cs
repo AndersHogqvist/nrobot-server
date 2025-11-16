@@ -6,6 +6,7 @@ using NRobot.Server.Imp.Domain;
 using NRobot.Server.Imp.Helpers;
 using System.Collections.Concurrent;
 using System.Threading;
+using Horizon.XmlRpc.Server;
 
 namespace NRobot.Server.Imp.Services
 {

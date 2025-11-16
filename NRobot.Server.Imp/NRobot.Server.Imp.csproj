@@ -12,7 +12,8 @@
     <Company>NRobot</Company>
     <Product>NRobot.Server.Imp</Product>
     <Copyright>Copyright 2016</Copyright>
-    <AssemblyVersion>1.0.0.%2a</AssemblyVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <AssemblyFileVersion>1.0.0.0</AssemblyFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
     <BaseAddress>4194304</BaseAddress>
@@ -49,5 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NRobot.Server.Exceptions\NRobot.Server.Exceptions.csproj" />
+    <ProjectReference Include="..\third-party\XmlRpc\Libraries\Horizon.XmlRpc.Core\Horizon.XmlRpc.Core.csproj" />
+    <ProjectReference Include="..\third-party\XmlRpc\Libraries\Horizon.XmlRpc.Server\Horizon.XmlRpc.Server.csproj" />
   </ItemGroup>
 </Project>
