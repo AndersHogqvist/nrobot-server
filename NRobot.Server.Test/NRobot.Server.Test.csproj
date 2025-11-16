@@ -8,10 +8,8 @@
     <DocumentationFile>..\build\NRobot.Server.Test.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <PackageReference Include="NUnit" Version="2.6.4" />
-    <PackageReference Include="xmlrpcnet" Version="2.5.0" />
+    <PackageReference Include="xmlrpcnet" Version="3.0.0.266" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NRobot.Server.Exceptions\NRobot.Server.Exceptions.csproj" />
