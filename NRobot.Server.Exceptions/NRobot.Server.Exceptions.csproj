@@ -7,6 +7,11 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <NoStdLib>False</NoStdLib>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <AssemblyTitle>NRobot.Server.Exceptions</AssemblyTitle>
+    <Company>NRobot</Company>
+    <Product>NRobot.Server.Exceptions</Product>
+    <Copyright>Copyright 2016</Copyright>
+    <AssemblyVersion>1.0.0.%2a</AssemblyVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
