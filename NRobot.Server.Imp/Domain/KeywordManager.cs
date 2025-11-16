@@ -211,7 +211,7 @@ namespace NRobot.Server.Imp.Domain
             var timer = new Stopwatch();
             var tracecontent = new MemoryStream();
             var tracelistener = new TextWriterTraceListener(tracecontent);
-            Trace.Listeners.Add(tracelistener);
+            System.Diagnostics.Trace.Listeners.Add(tracelistener);
 
             try
             {
@@ -276,7 +276,7 @@ namespace NRobot.Server.Imp.Domain
 
                 //get trace output
                 tracelistener.Flush();
-                Trace.Listeners.Remove(tracelistener);
+                System.Diagnostics.Trace.Listeners.Remove(tracelistener);
                 result.KeywordOutput = System.Text.Encoding.Default.GetString(tracecontent.ToArray());
 
                 //clean up

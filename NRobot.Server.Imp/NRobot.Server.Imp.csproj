@@ -8,6 +8,11 @@
     <DelaySign>False</DelaySign>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <TargetFramework>net9.0</TargetFramework>
+    <AssemblyTitle>NRobot.Server.Imp</AssemblyTitle>
+    <Company>NRobot</Company>
+    <Product>NRobot.Server.Imp</Product>
+    <Copyright>Copyright 2016</Copyright>
+    <AssemblyVersion>1.0.0.%2a</AssemblyVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
     <BaseAddress>4194304</BaseAddress>
