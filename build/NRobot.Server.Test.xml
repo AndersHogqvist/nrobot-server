@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NRobot.Server.Test</name>
+    </assembly>
+    <members>
+        <member name="T:NRobot.Server.Test.DomainTests.ClassAccessFixture">
+            <summary>
+            Tests to check different keyword class access levels
+            </summary>
+        </member>
+        <member name="T:NRobot.Server.Test.DomainTests.KeywordArgumentsFixture">
+            <summary>
+            Tests for get keyword arguments
+            </summary>
+        </member>
+        <member name="T:NRobot.Server.Test.DomainTests.KeywordDocumentationFixture">
+            <summary>
+            Tests that check the xml documentation on a keyword
+            </summary>
+        </member>
+        <member name="T:NRobot.Server.Test.DomainTests.MethodAccessFixture">
+            <summary>
+            Tests that check method access levels to determine if they are keywords
+            </summary>
+        </member>
+        <member name="T:NRobot.Server.Test.DomainTests.ParameterTypesFixture">
+            <summary>
+            Tests that checks methods with valid parameter types are considered keywords
+            </summary>
+        </member>
+        <member name="T:NRobot.Server.Test.DomainTests.ReturnTypesFixture">
+            <summary>
+            Tests that check methods with valid return types are keywords
+            </summary>
+        </member>
+        <member name="T:NRobot.Server.Test.DomainTests.AssemblyLoadingFixture">
+            <summary>
+            Tests that check loading of keyword assembly
+            </summary>
+        </member>
+        <member name="T:NRobot.Server.Test.DomainTests.RunKeywordFixture">
+            <summary>
+            Test cases for execution keywords via keyword manager
+            </summary>
+        </member>
+        <member name="T:NRobot.Server.Test.Keywords.RunKeyword">
+            <summary>
+            Keywords used by the RunKeywordFixture
+            </summary>
+        </member>
+        <member name="M:NRobot.Server.Test.Keywords.RunKeyword.MultiThreadKeyword(System.String)">
+            <summary>
+            Keyword used by multithread fixture
+            </summary>
+        </member>
+        <member name="T:NRobot.Server.Test.Keywords.TestKeywords">
+            <summary>
+            Class containing different keyword method signatures
+            </summary>
+        </member>
+        <member name="M:NRobot.Server.Test.Keywords.WithDocumentationClass.MethodWithComments">
+            <summary>
+            This is a method with a comment
+            </summary>
+        </member>
+        <member name="T:NRobot.Server.Test.ServiceTests.MultipleThreadsFixture">
+            <summary>
+            Tests to call the service xml-rpc methods with multiple threads
+            </summary>
+        </member>
+        <member name="T:NRobot.Server.Test.ServiceTests.StartStopServiceFixture">
+            <summary>
+            Tests to start and stop the service with different configurations
+            </summary>
+        </member>
+        <member name="T:NRobot.Server.Test.ServiceTests.XmlRpcFixture">
+            <summary>
+            Tests to call the individual xml-rpc methods and assert the returned values
+            </summary>
+        </member>
+    </members>
+</doc>
