@@ -2,6 +2,11 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <OutputType>Library</OutputType>
+    <AssemblyTitle>NRobot.Server.Test</AssemblyTitle>
+    <Company>NRobot</Company>
+    <Product>NRobot.Server.Test</Product>
+    <Copyright>Copyright 2016</Copyright>
+    <AssemblyVersion>1.0.0.%2a</AssemblyVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>..\build\</OutputPath>
