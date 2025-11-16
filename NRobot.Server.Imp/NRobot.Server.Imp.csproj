@@ -30,21 +30,17 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System.Configuration" />
     <Reference Update="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data.Linq" />
-    <Reference Include="System.Security" />
     <Reference Include="System.Web" />
     <Reference Update="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <PackageReference Include="log4net" Version="3.2.0" />
-    <PackageReference Include="xmlrpcnet" Version="2.5.0" />
+    <PackageReference Include="xmlrpcnet" Version="3.0.0.266" />
+    <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters" Version="2.1.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NRobot.Server.Exceptions\NRobot.Server.Exceptions.csproj" />
