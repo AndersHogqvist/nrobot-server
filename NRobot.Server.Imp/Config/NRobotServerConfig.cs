@@ -5,21 +5,21 @@ using NRobot.Server.Imp.XmlConfig;
 
 namespace NRobot.Server.Imp.Config
 {
-	/// <summary>
-	/// Main configuration for NRobot service
-	/// </summary>
-	public class NRobotServerConfig
-	{
-		
-
+    /// <summary>
+    /// Main configuration for NRobot service
+    /// </summary>
+    public class NRobotServerConfig
+    {
         public int Port { get; set; }
-        public Dictionary<String, LibraryConfig> AssemblyConfigs = new Dictionary<String, LibraryConfig>();
-
+        public Dictionary<String, LibraryConfig> AssemblyConfigs =
+            new Dictionary<String, LibraryConfig>();
 
         private void AddDomainConfig(LibraryConfig config)
         {
-            if (config == null) throw new ConfigurationErrorsException("Config specified is null");
-            if (String.IsNullOrEmpty(config.TypeName)) throw new ConfigurationErrorsException("Config has not Type defined");
+            if (config == null)
+                throw new ConfigurationErrorsException("Config specified is null");
+            if (String.IsNullOrEmpty(config.TypeName))
+                throw new ConfigurationErrorsException("Config has not Type defined");
             AssemblyConfigs.Add(config.TypeName, config);
         }
 
@@ -32,22 +32,16 @@ namespace NRobot.Server.Imp.Config
             //get keyword assemblies
             foreach (AssemblyElement xmlasm in xmlconfig.Assemblies)
             {
-                result.AddDomainConfig(new LibraryConfig() { Assembly = xmlasm.Name, TypeName = xmlasm.Type, Documentation = xmlasm.DocFile });
+                result.AddDomainConfig(
+                    new LibraryConfig()
+                    {
+                        Assembly = xmlasm.Name,
+                        TypeName = xmlasm.Type,
+                        Documentation = xmlasm.DocFile,
+                    }
+                );
             }
             return result;
         }
-
-
-
-
-
-
-
-
-       
-		
-		
-	}
-	
-	
+    }
 }
