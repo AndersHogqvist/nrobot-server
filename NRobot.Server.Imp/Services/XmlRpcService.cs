@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;﻿  ﻿
-using CookComputing.XmlRpc;
+using Horizon.XmlRpc.Core;
+using Horizon.XmlRpc.Server;
 using log4net;
 using NRobot.Server.Imp.Domain;
 using NRobot.Server.Imp.Helpers;

@@ -30,7 +30,6 @@ namespace NRobot.Server.Test.DomainTests
         }
 
         [Test]
-        [ExpectedException(typeof(KeywordLoadingException))]
         public void LoadAssembly_WithUnknownAssembly()
         {
             //setup
@@ -40,11 +39,10 @@ namespace NRobot.Server.Test.DomainTests
             config.Assembly = "NRobot.Server.Test.UnknownAssembly";
             config.TypeName = "NRobot.Server.Test.Keywords.TestKeywords";
             //load
-            kwmanager.AddLibrary(config);
+            Assert.Throws<KeywordLoadingException>(() => kwmanager.AddLibrary(config));
         }
 
         [Test]
-        [ExpectedException(typeof(KeywordLoadingException))]
         public void LoadAssembly_WithUnknownType()
         {
             //setup
@@ -54,11 +52,10 @@ namespace NRobot.Server.Test.DomainTests
             config.Assembly = "NRobot.Server.Test";
             config.TypeName = "NRobot.Server.Test.Keywords.UnknownType";
             //load
-            kwmanager.AddLibrary(config);
+            Assert.Throws<KeywordLoadingException>(() => kwmanager.AddLibrary(config));
         }
 
         [Test]
-        [ExpectedException(typeof(KeywordLoadingException))]
         public void LoadAssembly_WithUnknownXMLDocumentation()
         {
             //setup
@@ -69,18 +66,17 @@ namespace NRobot.Server.Test.DomainTests
             config.TypeName = "NRobot.Server.Test.Keywords.TestKeywords";
             config.Documentation = "NRobot.Server.Test.Unknown.xml";
             //load
-            kwmanager.AddLibrary(config);
+            Assert.Throws<KeywordLoadingException>(() => kwmanager.AddLibrary(config));
         }
 
         [Test]
-        [ExpectedException(typeof(KeywordLoadingException))]
         public void LoadAssembly_WithNullConfig()
         {
             //setup
             var config = new LibraryConfig();
             var kwmanager = new KeywordManager();
             //load
-            kwmanager.AddLibrary(config);
+            Assert.Throws<KeywordLoadingException>(() => kwmanager.AddLibrary(config));
         }
 
         [Test]

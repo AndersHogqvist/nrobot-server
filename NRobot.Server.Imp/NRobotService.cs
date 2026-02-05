@@ -81,6 +81,10 @@ namespace NRobot.Server.Imp
 		/// </summary>
 		private bool IsAdministrator()
     	{
+	        if (!OperatingSystem.IsWindows())
+	        {
+	            return true;
+	        }
 	        var identity = WindowsIdentity.GetCurrent();
 	        var principal = new WindowsPrincipal(identity);
 	        return principal.IsInRole(WindowsBuiltInRole.Administrator);

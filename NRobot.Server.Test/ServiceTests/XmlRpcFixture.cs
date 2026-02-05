@@ -1,5 +1,6 @@
 ﻿using System;
-using CookComputing.XmlRpc;
+using Horizon.XmlRpc.Client;
+using Horizon.XmlRpc.Core;
 using NRobot.Server.Imp.Config;
 using NRobot.Server.Imp.Services;
 using NRobot.Server.Imp;
@@ -72,15 +73,12 @@ namespace NRobot.Server.Test.ServiceTests
             Assert.Contains("INT RETURNTYPE",result);
         }
 
-        [ExpectedException(typeof(XmlRpcFaultException))]
         [Test]
         public void get_keyword_names_invalid_url()
         {
             var client = (IRemoteClient)XmlRpcProxyGen.Create(typeof(IRemoteClient));
             client.Url = "http://127.0.0.1:8270/NRobot/Server/Test/Keywords/UnknownType";
-            string[] result = client.get_keyword_names();
-            Assert.IsTrue(result.Length > 0);
-            Assert.Contains("INT RETURNTYPE", result);
+            Assert.Throws<XmlRpcFaultException>(() => client.get_keyword_names());
         }
 
 #endregion
