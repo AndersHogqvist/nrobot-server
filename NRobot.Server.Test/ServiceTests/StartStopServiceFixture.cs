@@ -79,7 +79,6 @@ namespace NRobot.Server.Test.ServiceTests
             _service.StartAsync();
         }
 
-        [ExpectedException(typeof(KeywordLoadingException))]
         [Test]
         public void StartService_InvalidAssembly()
         {
@@ -93,10 +92,9 @@ namespace NRobot.Server.Test.ServiceTests
                     Documentation = "NRobot.Server.Test.xml"
                 });
             _service = new NRobotService(config);
-            _service.StartAsync();
+            Assert.Throws<KeywordLoadingException>(() => _service.StartAsync());
         }
 
-        [ExpectedException(typeof(KeywordLoadingException))]
         [Test]
         public void StartService_InvalidType()
         {
@@ -110,10 +108,9 @@ namespace NRobot.Server.Test.ServiceTests
                     Documentation = "NRobot.Server.Test.xml"
                 });
             _service = new NRobotService(config);
-            _service.StartAsync();
+            Assert.Throws<KeywordLoadingException>(() => _service.StartAsync());
         }
 
-        [ExpectedException(typeof(KeywordLoadingException))]
         [Test]
         public void StartService_InvalidDocumentation()
         {
@@ -127,7 +124,7 @@ namespace NRobot.Server.Test.ServiceTests
                     Documentation = "NRobot.Server.TestUnknown.XML"
                 });
             _service = new NRobotService(config);
-            _service.StartAsync();
+            Assert.Throws<KeywordLoadingException>(() => _service.StartAsync());
         }
 
 

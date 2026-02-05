@@ -15,7 +15,7 @@ namespace NRobot.Server.Test.DomainTests
         private KeywordManager _keywordManager;
         private const string Typename = "NRobot.Server.Test.Keywords.TestKeywords";
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void Setup()
         {
             var config = new LibraryConfig();

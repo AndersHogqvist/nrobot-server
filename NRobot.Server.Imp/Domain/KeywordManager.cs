@@ -80,11 +80,11 @@ namespace NRobot.Server.Imp.Domain
             catch (Exception e)
             {
                 Log.Error(String.Format("Unable to load keyword library, {0}", e));
-                throw new KeywordLoadingException("Unable to load keyword library", e);
+                throw new KeywordLoadingException("Unable to load keyword library",e);
             }
         }
 
-
+        
         /// <summary>
         /// Checks method signature for keyword suitability
         /// </summary>
@@ -169,16 +169,16 @@ namespace NRobot.Server.Imp.Domain
         /// </summary>
         public Keyword GetKeyword(string typename, string friendlyname)
         {
-            if (!_loadedKeywords.ContainsKey(typename)) throw new Exception(String.Format("Keyword {0} not found in type {1}", friendlyname, typename));
+            if (!_loadedKeywords.ContainsKey(typename)) throw new Exception(String.Format("Keyword {0} not found in type {1}", friendlyname,typename));
             var keywords = _loadedKeywords[typename];
             foreach (var keyword in keywords)
             {
-                if (String.Equals(keyword.FriendlyName, friendlyname, StringComparison.CurrentCultureIgnoreCase))
+                if (String.Equals(keyword.FriendlyName,friendlyname,StringComparison.CurrentCultureIgnoreCase))
                 {
                     return keyword;
                 }
             }
-            throw new Exception(String.Format(String.Format("Keyword {0} not found in type {1}", friendlyname, typename)));
+            throw new Exception(String.Format(String.Format("Keyword {0} not found in type {1}", friendlyname,typename)));
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace NRobot.Server.Imp.Domain
         /// </summary>
         public RunKeywordResult RunKeyword(string typename, string friendlyname, object[] arguments)
         {
-
+            
             //setup
             var result = new RunKeywordResult();
             var timer = new Stopwatch();
@@ -219,42 +219,30 @@ namespace NRobot.Server.Imp.Domain
                 var keyword = GetKeyword(typename, friendlyname);
                 var method = keyword.KeywordMethod;
                 var numargs = keyword.ArgumentCount;
-                var numOptionalArgs = method.GetParameters().Count(p => p.IsOptional);
-                var args = arguments?.ToList();
 
                 //check number of arguments
-                if (args == null)
+                if (arguments == null)
                 {
-                    if (numargs != 0 && numOptionalArgs == 0) throw new Exception("Incorrect number of keyword arguments supplied");
+                    if (numargs != 0) throw new Exception("Incorrect number of keyword arguments supplied");
                 }
                 else
                 {
-                    if (args.Count != numargs && (args.Count < (numargs - numOptionalArgs)))
+                    if (arguments.Length != numargs)
                     {
                         throw new Exception("Incorrect number of keyword arguments supplied");
                     }
                 }
 
-                if (numOptionalArgs > 0)
-                {
-                    //fill in optional arguments
-                    foreach (var param in method.GetParameters().Where(p => p.IsOptional))
-                    {
-                        args.Add(param.DefaultValue ?? Type.Missing);
-                    }
-
-                }
-
                 //call method
                 timer.Start();
-                if (method.ReturnParameter != null && method.ReturnParameter.ParameterType == typeof(void))
+                if (method.ReturnParameter != null && method.ReturnParameter.ParameterType == typeof (void))
                 {
-                    method.Invoke(keyword.ClassInstance, args.ToArray());
+                    method.Invoke(keyword.ClassInstance, arguments);
                     result.KeywordReturn = null;
                 }
                 else
                 {
-                    result.KeywordReturn = method.Invoke(keyword.ClassInstance, args.ToArray());
+                    result.KeywordReturn = method.Invoke(keyword.ClassInstance, arguments);
                 }
                 //success
                 result.KeywordStatus = RunKeywordStatus.Pass;
@@ -278,7 +266,7 @@ namespace NRobot.Server.Imp.Domain
                 tracelistener.Flush();
                 Trace.Listeners.Remove(tracelistener);
                 result.KeywordOutput = System.Text.Encoding.Default.GetString(tracecontent.ToArray());
-
+                
                 //clean up
                 tracecontent.SetLength(0);
                 tracelistener.Dispose();
@@ -288,7 +276,7 @@ namespace NRobot.Server.Imp.Domain
             return result;
         }
 
-        #region AssemblyResolver
+#region AssemblyResolver
 
 
         /// <summary>
@@ -321,7 +309,7 @@ namespace NRobot.Server.Imp.Domain
 
         }
 
-        #endregion
+#endregion
 
 
     }

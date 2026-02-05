@@ -1,5 +1,5 @@
 ﻿using System;
-using CookComputing.XmlRpc;
+using Horizon.XmlRpc.Core;
 using NRobot.Server.Imp.Domain;
 
 namespace NRobot.Server.Imp.Helpers

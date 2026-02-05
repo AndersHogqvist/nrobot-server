@@ -35,14 +35,13 @@ namespace NRobot.Server.Test.DomainTests
         }
 
         [Test]
-        [ExpectedException(typeof(KeywordLoadingException))]
         public void ClassAccess_StaticClass()
         {
             var config = new LibraryConfig();
             var kwmanager = new KeywordManager();
             config.Assembly = "NRobot.Server.Test";
             config.TypeName = "NRobot.Server.Test.Keywords.StaticClass";
-            kwmanager.AddLibrary(config);
+            Assert.Throws<KeywordLoadingException>(() => kwmanager.AddLibrary(config));
         }
 
 

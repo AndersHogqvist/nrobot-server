@@ -17,7 +17,7 @@ namespace NRobot.Server.Test.DomainTests
         private const string RunKeywordType = "NRobot.Server.Test.Keywords.RunKeyword";
         private const string TestKeywordType = "NRobot.Server.Test.Keywords.TestKeywords";
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void Setup()
         {
             var config = new LibraryConfig();
