@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
-using System.IO;
 using log4net;
 using NRobot.Server.Imp.Config;
 
@@ -15,7 +16,6 @@ namespace NRobot.Server.Imp.Domain
     /// </summary>
     public class KeywordManager
     {
-
         private static readonly ILog Log = LogManager.GetLogger(typeof(KeywordManager));
 
         //loaded keywords by type
@@ -34,8 +34,10 @@ namespace NRobot.Server.Imp.Domain
             try
             {
                 //check and record inputs
-                if (String.IsNullOrEmpty(config.Assembly)) throw new Exception("No keyword library specified");
-                if (String.IsNullOrEmpty(config.TypeName)) throw new Exception("No keyword class type specified");
+                if (String.IsNullOrEmpty(config.Assembly))
+                    throw new Exception("No keyword library specified");
+                if (String.IsNullOrEmpty(config.TypeName))
+                    throw new Exception("No keyword class type specified");
                 //check if already loaded type
                 if (_loadedKeywords.ContainsKey(config.TypeName))
                 {
@@ -45,7 +47,9 @@ namespace NRobot.Server.Imp.Domain
                 Log.Debug(String.Format("Loading keywords from type : {0}", config.TypeName));
 
                 //get instance
-                var kwinstance = Activator.CreateInstance(config.Assembly, config.TypeName).Unwrap();
+                var kwinstance = Activator
+                    .CreateInstance(config.Assembly, config.TypeName)
+                    .Unwrap();
                 var kwtype = kwinstance.GetType();
 
                 //load xml documentation
@@ -58,7 +62,12 @@ namespace NRobot.Server.Imp.Domain
                     }
                     else
                     {
-                        throw new Exception(String.Format("Xml documentation file not found : {0}", config.Documentation));
+                        throw new Exception(
+                            String.Format(
+                                "Xml documentation file not found : {0}",
+                                config.Documentation
+                            )
+                        );
                     }
                 }
 
@@ -70,21 +79,28 @@ namespace NRobot.Server.Imp.Domain
                     if (HasValidSignature(method))
                     {
                         var keyword = new Keyword(kwinstance, method, kwdocumentation);
-                        if (_loadedKeywords.ContainsKey(keyword.FriendlyName)) throw new Exception(String.Format("{0} keyword is duplicated", keyword.FriendlyName));
+                        if (_loadedKeywords.ContainsKey(keyword.FriendlyName))
+                            throw new Exception(
+                                String.Format("{0} keyword is duplicated", keyword.FriendlyName)
+                            );
                         keywords.Add(keyword);
                     }
                 }
                 _loadedKeywords.Add(config.TypeName, keywords);
-                Log.Debug(String.Format("Loaded keywords : {0}", String.Join(",", keywords.Select(k => k.FriendlyName).ToArray())));
+                Log.Debug(
+                    String.Format(
+                        "Loaded keywords : {0}",
+                        String.Join(",", keywords.Select(k => k.FriendlyName).ToArray())
+                    )
+                );
             }
             catch (Exception e)
             {
                 Log.Error(String.Format("Unable to load keyword library, {0}", e));
-                throw new KeywordLoadingException("Unable to load keyword library",e);
+                throw new KeywordLoadingException("Unable to load keyword library", e);
             }
         }
 
-        
         /// <summary>
         /// Checks method signature for keyword suitability
         /// </summary>
@@ -92,7 +108,7 @@ namespace NRobot.Server.Imp.Domain
         {
             Boolean result = false;
 
-            //check return types (void, string, boolean, int32, int64, double, string[] )
+            //check return types (void, string, boolean, int32, int64, double, string[], Dictionary<string,int> )
             if (mi.ReturnParameter != null)
             {
                 Type returntype = mi.ReturnParameter.ParameterType;
@@ -120,18 +136,25 @@ namespace NRobot.Server.Imp.Domain
                 {
                     result = true;
                 }
+                if (returntype == typeof(Dictionary<string, int>))
+                {
+                    result = true;
+                }
                 if (returntype.IsArray && returntype.GetElementType() == typeof(String))
                 {
                     result = true;
                 }
             }
             //finish here if false
-            if (!result) return false;
+            if (!result)
+                return false;
 
             //check method access
-            if (!mi.IsPublic) result = false;
+            if (!mi.IsPublic)
+                result = false;
             //finish here if false
-            if (!result) return false;
+            if (!result)
+                return false;
 
             //check if obsolete
             object[] methodattr = mi.GetCustomAttributes(false);
@@ -147,13 +170,22 @@ namespace NRobot.Server.Imp.Domain
                 }
             }
             //finish here if false
-            if (!result) return false;
+            if (!result)
+                return false;
 
             //check argument types
             ParameterInfo[] parameters = mi.GetParameters();
             foreach (ParameterInfo par in parameters)
             {
-                if (par.ParameterType != typeof(String))
+                var parameterType = par.ParameterType;
+                if (
+                    parameterType != typeof(String)
+                    && parameterType != typeof(Boolean)
+                    && parameterType != typeof(Int32)
+                    && parameterType != typeof(Int64)
+                    && parameterType != typeof(Double)
+                    && !parameterType.IsEnum
+                )
                 {
                     result = false;
                     break;
@@ -163,22 +195,34 @@ namespace NRobot.Server.Imp.Domain
             return result;
         }
 
-
         /// <summary>
         /// Gets a keyword based on its name, exception if not found in map
         /// </summary>
         public Keyword GetKeyword(string typename, string friendlyname)
         {
-            if (!_loadedKeywords.ContainsKey(typename)) throw new Exception(String.Format("Keyword {0} not found in type {1}", friendlyname,typename));
+            if (!_loadedKeywords.ContainsKey(typename))
+                throw new Exception(
+                    String.Format("Keyword {0} not found in type {1}", friendlyname, typename)
+                );
             var keywords = _loadedKeywords[typename];
             foreach (var keyword in keywords)
             {
-                if (String.Equals(keyword.FriendlyName,friendlyname,StringComparison.CurrentCultureIgnoreCase))
+                if (
+                    String.Equals(
+                        keyword.FriendlyName,
+                        friendlyname,
+                        StringComparison.CurrentCultureIgnoreCase
+                    )
+                )
                 {
                     return keyword;
                 }
             }
-            throw new Exception(String.Format(String.Format("Keyword {0} not found in type {1}", friendlyname,typename)));
+            throw new Exception(
+                String.Format(
+                    String.Format("Keyword {0} not found in type {1}", friendlyname, typename)
+                )
+            );
         }
 
         /// <summary>
@@ -186,8 +230,10 @@ namespace NRobot.Server.Imp.Domain
         /// </summary>
         public string[] GetKeywordNamesForType(string typename)
         {
-            if (String.IsNullOrEmpty(typename)) throw new Exception("No type name specified");
-            if (!_loadedKeywords.ContainsKey(typename)) throw new Exception(String.Format("Type {0} is not loaded", typename));
+            if (String.IsNullOrEmpty(typename))
+                throw new Exception("No type name specified");
+            if (!_loadedKeywords.ContainsKey(typename))
+                throw new Exception(String.Format("Type {0} is not loaded", typename));
             return _loadedKeywords[typename].Select(k => k.FriendlyName).ToArray();
         }
 
@@ -199,13 +245,11 @@ namespace NRobot.Server.Imp.Domain
             return _loadedKeywords.Keys.ToArray();
         }
 
-
         /// <summary>
         /// Executes a keyword
         /// </summary>
         public RunKeywordResult RunKeyword(string typename, string friendlyname, object[] arguments)
         {
-            
             //setup
             var result = new RunKeywordResult();
             var timer = new Stopwatch();
@@ -219,30 +263,173 @@ namespace NRobot.Server.Imp.Domain
                 var keyword = GetKeyword(typename, friendlyname);
                 var method = keyword.KeywordMethod;
                 var numargs = keyword.ArgumentCount;
+                var parameters = method.GetParameters();
+                var requiredArgs = parameters.Count(p => !p.IsOptional);
+                var args = arguments?.ToList() ?? new List<object>();
 
-                //check number of arguments
-                if (arguments == null)
+                if (args.Count < requiredArgs || args.Count > numargs)
                 {
-                    if (numargs != 0) throw new Exception("Incorrect number of keyword arguments supplied");
+                    throw new Exception("Incorrect number of keyword arguments supplied");
                 }
-                else
+
+                var booleanStrings = new[] { "true", "on", "1" };
+                for (var i = 0; i < parameters.Length; i++)
                 {
-                    if (arguments.Length != numargs)
+                    var param = parameters[i];
+                    var paramType = param.ParameterType;
+
+                    if (i >= args.Count)
                     {
-                        throw new Exception("Incorrect number of keyword arguments supplied");
+                        if (!param.IsOptional)
+                        {
+                            throw new Exception($"Missing argument {param.Name} ({paramType})");
+                        }
+                        args.Add(param.DefaultValue ?? Type.Missing);
+                        continue;
                     }
+
+                    var arg = args[i];
+                    if (arg == null)
+                    {
+                        if (paramType.IsValueType && Nullable.GetUnderlyingType(paramType) == null)
+                        {
+                            throw new Exception($"Argument {param.Name} cannot be null");
+                        }
+                        continue;
+                    }
+
+                    if (paramType == typeof(String))
+                    {
+                        if (arg is not string)
+                        {
+                            args[i] =
+                                Convert.ToString(arg, CultureInfo.InvariantCulture) ?? String.Empty;
+                        }
+                        continue;
+                    }
+
+                    if (paramType == typeof(Boolean))
+                    {
+                        if (arg is string boolString)
+                        {
+                            args[i] = booleanStrings.Contains(
+                                boolString,
+                                StringComparer.CurrentCultureIgnoreCase
+                            );
+                        }
+                        else if (arg is int intValue)
+                        {
+                            args[i] = intValue != 0;
+                        }
+                        else if (arg is not bool)
+                        {
+                            throw new Exception(
+                                $"type {arg.GetType()} cannot be inserted into parameter name {param.Name}({paramType})"
+                            );
+                        }
+                        continue;
+                    }
+
+                    if (paramType == typeof(Int32))
+                    {
+                        if (arg is string intString)
+                        {
+                            args[i] = int.Parse(intString, CultureInfo.InvariantCulture);
+                        }
+                        else if (arg is long longValue)
+                        {
+                            args[i] = Convert.ToInt32(longValue, CultureInfo.InvariantCulture);
+                        }
+                        else if (arg is double doubleValue)
+                        {
+                            args[i] = Convert.ToInt32(doubleValue, CultureInfo.InvariantCulture);
+                        }
+                        else if (arg is not int)
+                        {
+                            throw new Exception(
+                                $"type {arg.GetType()} cannot be inserted into parameter name {param.Name}({paramType})"
+                            );
+                        }
+                        continue;
+                    }
+
+                    if (paramType == typeof(Int64))
+                    {
+                        if (arg is string longString)
+                        {
+                            args[i] = long.Parse(longString, CultureInfo.InvariantCulture);
+                        }
+                        else if (arg is int intValue)
+                        {
+                            args[i] = Convert.ToInt64(intValue, CultureInfo.InvariantCulture);
+                        }
+                        else if (arg is double doubleValue)
+                        {
+                            args[i] = Convert.ToInt64(doubleValue, CultureInfo.InvariantCulture);
+                        }
+                        else if (arg is not long)
+                        {
+                            throw new Exception(
+                                $"type {arg.GetType()} cannot be inserted into parameter name {param.Name}({paramType})"
+                            );
+                        }
+                        continue;
+                    }
+
+                    if (paramType == typeof(Double))
+                    {
+                        if (arg is string doubleString)
+                        {
+                            args[i] = double.Parse(doubleString, CultureInfo.InvariantCulture);
+                        }
+                        else if (arg is int intValue)
+                        {
+                            args[i] = Convert.ToDouble(intValue, CultureInfo.InvariantCulture);
+                        }
+                        else if (arg is long longValue)
+                        {
+                            args[i] = Convert.ToDouble(longValue, CultureInfo.InvariantCulture);
+                        }
+                        else if (arg is not double)
+                        {
+                            throw new Exception(
+                                $"type {arg.GetType()} cannot be inserted into parameter name {param.Name}({paramType})"
+                            );
+                        }
+                        continue;
+                    }
+
+                    if (paramType.IsEnum)
+                    {
+                        if (arg is string enumString)
+                        {
+                            args[i] = Enum.Parse(paramType, enumString, true);
+                        }
+                        else
+                        {
+                            args[i] = Enum.ToObject(paramType, arg);
+                        }
+                        continue;
+                    }
+
+                    throw new Exception(
+                        $"type {arg.GetType()} cannot be inserted into parameter name {param.Name}({paramType})"
+                    );
                 }
 
                 //call method
                 timer.Start();
-                if (method.ReturnParameter != null && method.ReturnParameter.ParameterType == typeof (void))
+                if (
+                    method.ReturnParameter != null
+                    && method.ReturnParameter.ParameterType == typeof(void)
+                )
                 {
-                    method.Invoke(keyword.ClassInstance, arguments);
+                    method.Invoke(keyword.ClassInstance, args.ToArray());
                     result.KeywordReturn = null;
                 }
                 else
                 {
-                    result.KeywordReturn = method.Invoke(keyword.ClassInstance, arguments);
+                    result.KeywordReturn = method.Invoke(keyword.ClassInstance, args.ToArray());
                 }
                 //success
                 result.KeywordStatus = RunKeywordStatus.Pass;
@@ -265,8 +452,10 @@ namespace NRobot.Server.Imp.Domain
                 //get trace output
                 tracelistener.Flush();
                 Trace.Listeners.Remove(tracelistener);
-                result.KeywordOutput = System.Text.Encoding.Default.GetString(tracecontent.ToArray());
-                
+                result.KeywordOutput = System.Text.Encoding.Default.GetString(
+                    tracecontent.ToArray()
+                );
+
                 //clean up
                 tracecontent.SetLength(0);
                 tracelistener.Dispose();
@@ -276,7 +465,7 @@ namespace NRobot.Server.Imp.Domain
             return result;
         }
 
-#region AssemblyResolver
+        #region AssemblyResolver
 
 
         /// <summary>
@@ -306,11 +495,8 @@ namespace NRobot.Server.Imp.Domain
             {
                 return null;
             }
-
         }
 
-#endregion
-
-
+        #endregion
     }
 }
