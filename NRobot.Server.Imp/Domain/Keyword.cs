@@ -14,6 +14,7 @@ namespace NRobot.Server.Imp.Domain
         public String KeywordDocumentation { get; set; }
         public String FriendlyName { get; set; }
         public string[] ArgumentNames { get; set; }
+        public string[] ArgumentDocumentation { get; set; }
         public Object ClassInstance { get; set; }
 
         /// <summary>
@@ -41,6 +42,7 @@ namespace NRobot.Server.Imp.Domain
             //get argument names
             ParameterInfo[] pis = KeywordMethod.GetParameters();
             ArgumentNames = new String[pis.Length];
+            ArgumentDocumentation = new String[pis.Length];
             int i = 0;
             foreach (ParameterInfo pi in pis)
             {
@@ -50,6 +52,10 @@ namespace NRobot.Server.Imp.Domain
             if (documentation != null)
             {
                 KeywordDocumentation = method.GetXmlDocumentation(documentation);
+                for (int j = 0; j < pis.Length; j++)
+                {
+                    ArgumentDocumentation[j] = pis[j].GetXmlDocumentation(documentation);
+                }
             }
         }
 
