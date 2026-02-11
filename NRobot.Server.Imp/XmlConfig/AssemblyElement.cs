@@ -31,7 +31,7 @@ namespace NRobot.Server.Imp.XmlConfig
                 }
                 catch
                 {
-                    return String.Empty;
+                    return string.Empty;
                 }
             }
         }

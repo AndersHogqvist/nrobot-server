@@ -11,8 +11,8 @@ namespace NRobot.Server.Imp.Domain
     public class Keyword
     {
         public MethodInfo KeywordMethod { get; set; }
-        public String KeywordDocumentation { get; set; }
-        public String FriendlyName { get; set; }
+        public string KeywordDocumentation { get; set; }
+        public string FriendlyName { get; set; }
         public string[] ArgumentNames { get; set; }
         public string[] ArgumentDocumentation { get; set; }
         public Object ClassInstance { get; set; }
@@ -28,7 +28,7 @@ namespace NRobot.Server.Imp.Domain
         /// <summary>
         /// Constructor from method
         /// </summary>
-        public Keyword(Object classinstance, MethodInfo method, XDocument documentation)
+        public Keyword(object classinstance, MethodInfo method, XDocument documentation)
         {
             if (classinstance == null)
                 throw new Exception("No class instance specified");
@@ -36,13 +36,13 @@ namespace NRobot.Server.Imp.Domain
                 throw new Exception("No keyword method specified");
             //record properties
             KeywordMethod = method;
-            KeywordDocumentation = String.Empty;
+            KeywordDocumentation = string.Empty;
             FriendlyName = ToSnakeCase(KeywordMethod.Name);
             ClassInstance = classinstance;
             //get argument names
             ParameterInfo[] pis = KeywordMethod.GetParameters();
-            ArgumentNames = new String[pis.Length];
-            ArgumentDocumentation = new String[pis.Length];
+            ArgumentNames = new string[pis.Length];
+            ArgumentDocumentation = new string[pis.Length];
             int i = 0;
             foreach (ParameterInfo pi in pis)
             {
@@ -61,8 +61,8 @@ namespace NRobot.Server.Imp.Domain
 
         private static string ToSnakeCase(string name)
         {
-            if (String.IsNullOrEmpty(name))
-                return String.Empty;
+            if (string.IsNullOrEmpty(name))
+                return string.Empty;
 
             var builder = new StringBuilder(name.Length + 4);
             for (var i = 0; i < name.Length; i++)
@@ -74,12 +74,12 @@ namespace NRobot.Server.Imp.Domain
                     continue;
                 }
 
-                if (Char.IsDigit(ch))
+                if (char.IsDigit(ch))
                 {
                     if (i > 0)
                     {
                         var prev = name[i - 1];
-                        if (prev != '_' && !Char.IsDigit(prev))
+                        if (prev != '_' && !char.IsDigit(prev))
                         {
                             builder.Append('_');
                         }
@@ -88,7 +88,7 @@ namespace NRobot.Server.Imp.Domain
                     continue;
                 }
 
-                if (Char.IsUpper(ch))
+                if (char.IsUpper(ch))
                 {
                     if (i > 0)
                     {
@@ -96,17 +96,17 @@ namespace NRobot.Server.Imp.Domain
                         var next = i + 1 < name.Length ? name[i + 1] : '\0';
                         if (
                             prev != '_'
-                            && (Char.IsLower(prev) || Char.IsDigit(prev) || Char.IsLower(next))
+                            && (char.IsLower(prev) || char.IsDigit(prev) || char.IsLower(next))
                         )
                         {
                             builder.Append('_');
                         }
                     }
-                    builder.Append(Char.ToLowerInvariant(ch));
+                    builder.Append(char.ToLowerInvariant(ch));
                     continue;
                 }
 
-                builder.Append(Char.ToLowerInvariant(ch));
+                builder.Append(char.ToLowerInvariant(ch));
             }
 
             return builder.ToString();

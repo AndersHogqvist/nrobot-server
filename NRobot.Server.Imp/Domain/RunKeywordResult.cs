@@ -25,7 +25,7 @@ namespace NRobot.Server.Imp.Domain
 
         //output from command types "RunKeyword"
         public string KeywordOutput { get; set; }
-        public Object KeywordReturn { get; set; }
+        public object KeywordReturn { get; set; }
         public string KeywordError { get; set; }
         public string KeywordTraceback { get; set; }
         public double KeywordDuration { get; set; }
@@ -33,7 +33,7 @@ namespace NRobot.Server.Imp.Domain
         public override string ToString()
         {
             //build return value string
-            String kwReturn;
+            string kwReturn;
             if (KeywordReturn == null)
             {
                 kwReturn = "Null";
@@ -43,11 +43,11 @@ namespace NRobot.Server.Imp.Domain
                 //check if array return type
                 if (
                     KeywordReturn.GetType().IsArray
-                    && KeywordReturn.GetType().GetElementType() == typeof(String)
+                    && KeywordReturn.GetType().GetElementType() == typeof(string)
                 )
                 {
-                    var retarr = (String[])KeywordReturn;
-                    kwReturn = "[" + String.Join(",", retarr) + "]";
+                    var retarr = (string[])KeywordReturn;
+                    kwReturn = "[" + string.Join(",", retarr) + "]";
                 }
                 else
                 {

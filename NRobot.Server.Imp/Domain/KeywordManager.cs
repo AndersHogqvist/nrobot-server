@@ -34,17 +34,17 @@ namespace NRobot.Server.Imp.Domain
             try
             {
                 //check and record inputs
-                if (String.IsNullOrEmpty(config.Assembly))
+                if (string.IsNullOrEmpty(config.Assembly))
                     throw new Exception("No keyword library specified");
-                if (String.IsNullOrEmpty(config.TypeName))
+                if (string.IsNullOrEmpty(config.TypeName))
                     throw new Exception("No keyword class type specified");
                 //check if already loaded type
                 if (_loadedKeywords.ContainsKey(config.TypeName))
                 {
-                    Log.Debug(String.Format("Type {0} is already loaded", config.TypeName));
+                    Log.Debug(string.Format("Type {0} is already loaded", config.TypeName));
                     return;
                 }
-                Log.Debug(String.Format("Loading keywords from type : {0}", config.TypeName));
+                Log.Debug(string.Format("Loading keywords from type : {0}", config.TypeName));
 
                 //get instance
                 var kwinstance = Activator
@@ -54,7 +54,7 @@ namespace NRobot.Server.Imp.Domain
 
                 //load xml documentation
                 XDocument kwdocumentation = null;
-                if (!String.IsNullOrEmpty(config.Documentation))
+                if (!string.IsNullOrEmpty(config.Documentation))
                 {
                     if (File.Exists(config.Documentation))
                     {
@@ -63,7 +63,7 @@ namespace NRobot.Server.Imp.Domain
                     else
                     {
                         throw new Exception(
-                            String.Format(
+                            string.Format(
                                 "Xml documentation file not found : {0}",
                                 config.Documentation
                             )
@@ -81,22 +81,22 @@ namespace NRobot.Server.Imp.Domain
                         var keyword = new Keyword(kwinstance, method, kwdocumentation);
                         if (_loadedKeywords.ContainsKey(keyword.FriendlyName))
                             throw new Exception(
-                                String.Format("{0} keyword is duplicated", keyword.FriendlyName)
+                                string.Format("{0} keyword is duplicated", keyword.FriendlyName)
                             );
                         keywords.Add(keyword);
                     }
                 }
                 _loadedKeywords.Add(config.TypeName, keywords);
                 Log.Debug(
-                    String.Format(
+                    string.Format(
                         "Loaded keywords : {0}",
-                        String.Join(",", keywords.Select(k => k.FriendlyName).ToArray())
+                        string.Join(",", keywords.Select(k => k.FriendlyName).ToArray())
                     )
                 );
             }
             catch (Exception e)
             {
-                Log.Error(String.Format("Unable to load keyword library, {0}", e));
+                Log.Error(string.Format("Unable to load keyword library, {0}", e));
                 throw new KeywordLoadingException("Unable to load keyword library", e);
             }
         }
@@ -202,13 +202,13 @@ namespace NRobot.Server.Imp.Domain
         {
             if (!_loadedKeywords.ContainsKey(typename))
                 throw new Exception(
-                    String.Format("Keyword {0} not found in type {1}", friendlyname, typename)
+                    string.Format("Keyword {0} not found in type {1}", friendlyname, typename)
                 );
             var keywords = _loadedKeywords[typename];
             foreach (var keyword in keywords)
             {
                 if (
-                    String.Equals(
+                    string.Equals(
                         keyword.FriendlyName,
                         friendlyname,
                         StringComparison.CurrentCultureIgnoreCase
@@ -219,8 +219,8 @@ namespace NRobot.Server.Imp.Domain
                 }
             }
             throw new Exception(
-                String.Format(
-                    String.Format("Keyword {0} not found in type {1}", friendlyname, typename)
+                string.Format(
+                    string.Format("Keyword {0} not found in type {1}", friendlyname, typename)
                 )
             );
         }
@@ -230,10 +230,10 @@ namespace NRobot.Server.Imp.Domain
         /// </summary>
         public string[] GetKeywordNamesForType(string typename)
         {
-            if (String.IsNullOrEmpty(typename))
+            if (string.IsNullOrEmpty(typename))
                 throw new Exception("No type name specified");
             if (!_loadedKeywords.ContainsKey(typename))
-                throw new Exception(String.Format("Type {0} is not loaded", typename));
+                throw new Exception(string.Format("Type {0} is not loaded", typename));
             return _loadedKeywords[typename].Select(k => k.FriendlyName).ToArray();
         }
 
@@ -303,7 +303,7 @@ namespace NRobot.Server.Imp.Domain
                         if (arg is not string)
                         {
                             args[i] =
-                                Convert.ToString(arg, CultureInfo.InvariantCulture) ?? String.Empty;
+                                Convert.ToString(arg, CultureInfo.InvariantCulture) ?? string.Empty;
                         }
                         continue;
                     }
@@ -482,7 +482,7 @@ namespace NRobot.Server.Imp.Domain
                 if (e.Name.Contains("\\"))
                 {
                     var libpath = Path.GetDirectoryName(e.Name);
-                    if (!String.IsNullOrEmpty(libpath))
+                    if (!string.IsNullOrEmpty(libpath))
                     {
                         var asmname = new AssemblyName(e.Name);
                         var asmpath = Path.Combine(libpath, asmname.Name);

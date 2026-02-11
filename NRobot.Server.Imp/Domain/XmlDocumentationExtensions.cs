@@ -49,7 +49,7 @@ namespace NRobot.Server.Imp.Domain
                     prefixCode = 'M';
 
                     // parameters are listed according to their type, not their name
-                    string paramTypesList = String.Join(
+                    string paramTypesList = string.Join(
                         ",",
                         ((MethodBase)member)
                             .GetParameters()
@@ -57,7 +57,7 @@ namespace NRobot.Server.Imp.Domain
                             .Select(x => x.ParameterType.FullName)
                             .ToArray()
                     );
-                    if (!String.IsNullOrEmpty(paramTypesList))
+                    if (!string.IsNullOrEmpty(paramTypesList))
                         memberName += "(" + paramTypesList + ")";
                     break;
 
@@ -86,7 +86,7 @@ namespace NRobot.Server.Imp.Domain
             }
 
             // elements are of the form "M:Namespace.Class.Method"
-            return String.Format("{0}:{1}", prefixCode, memberName);
+            return string.Format("{0}:{1}", prefixCode, memberName);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace NRobot.Server.Imp.Domain
             if (_cachedXml.ContainsKey(assemblyName.FullName))
                 xml = _cachedXml[assemblyName.FullName];
             else
-                _cachedXml[assemblyName.FullName] = (xml = XDocument.Load(pathToXmlFile));
+                _cachedXml[assemblyName.FullName] = xml = XDocument.Load(pathToXmlFile);
 
             return GetXmlDocumentation(member, xml);
         }
@@ -128,7 +128,7 @@ namespace NRobot.Server.Imp.Domain
         public static string GetXmlDocumentation(this MemberInfo member, XDocument xml)
         {
             return xml.XPathEvaluate(
-                    String.Format(
+                    string.Format(
                         "string(/doc/members/member[@name='{0}']/summary)",
                         GetMemberElementName(member)
                     )
@@ -162,7 +162,7 @@ namespace NRobot.Server.Imp.Domain
             if (_cachedXml.ContainsKey(assemblyName.FullName))
                 xml = _cachedXml[assemblyName.FullName];
             else
-                _cachedXml[assemblyName.FullName] = (xml = XDocument.Load(pathToXmlFile));
+                _cachedXml[assemblyName.FullName] = xml = XDocument.Load(pathToXmlFile);
 
             return GetXmlDocumentation(parameter, xml);
         }
@@ -175,9 +175,9 @@ namespace NRobot.Server.Imp.Domain
         /// <returns>The contents of the returns/param tag for the parameter.</returns>
         public static string GetXmlDocumentation(this ParameterInfo parameter, XDocument xml)
         {
-            if (parameter.IsRetval || String.IsNullOrEmpty(parameter.Name))
+            if (parameter.IsRetval || string.IsNullOrEmpty(parameter.Name))
                 return xml.XPathEvaluate(
-                        String.Format(
+                        string.Format(
                             "string(/doc/members/member[@name='{0}']/returns)",
                             GetMemberElementName(parameter.Member)
                         )
@@ -186,7 +186,7 @@ namespace NRobot.Server.Imp.Domain
                     .Trim();
             else
                 return xml.XPathEvaluate(
-                        String.Format(
+                        string.Format(
                             "string(/doc/members/member[@name='{0}']/param[@name='{1}'])",
                             GetMemberElementName(parameter.Member),
                             parameter.Name

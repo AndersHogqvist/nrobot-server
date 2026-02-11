@@ -11,14 +11,14 @@ namespace NRobot.Server.Imp.Config
     public class NRobotServerConfig
     {
         public int Port { get; set; }
-        public Dictionary<String, LibraryConfig> AssemblyConfigs =
-            new Dictionary<String, LibraryConfig>();
+        public Dictionary<string, LibraryConfig> AssemblyConfigs =
+            new Dictionary<string, LibraryConfig>();
 
         private void AddDomainConfig(LibraryConfig config)
         {
             if (config == null)
                 throw new ConfigurationErrorsException("Config specified is null");
-            if (String.IsNullOrEmpty(config.TypeName))
+            if (string.IsNullOrEmpty(config.TypeName))
                 throw new ConfigurationErrorsException("Config has not Type defined");
             AssemblyConfigs.Add(config.TypeName, config);
         }
@@ -26,9 +26,11 @@ namespace NRobot.Server.Imp.Config
         public static NRobotServerConfig LoadXmlConfiguration()
         {
             var xmlconfig = NRobotServerConfiguration.GetConfig();
-            var result = new NRobotServerConfig();
-            //get port
-            result.Port = int.Parse(xmlconfig.Port.Number);
+            var result = new NRobotServerConfig
+            {
+                //get port
+                Port = int.Parse(xmlconfig.Port.Number),
+            };
             //get keyword assemblies
             foreach (AssemblyElement xmlasm in xmlconfig.Assemblies)
             {
