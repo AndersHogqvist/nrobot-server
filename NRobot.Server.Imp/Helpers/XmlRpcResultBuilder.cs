@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections;
 using Horizon.XmlRpc.Core;
 using NRobot.Server.Imp.Domain;
 
@@ -25,7 +25,7 @@ namespace NRobot.Server.Imp.Helpers
                 result.Add("status", "FAIL");
             }
             //add error
-            if (String.IsNullOrEmpty(kwresult.KeywordError))
+            if (string.IsNullOrEmpty(kwresult.KeywordError))
             {
                 result.Add("error", "");
             }
@@ -34,7 +34,7 @@ namespace NRobot.Server.Imp.Helpers
                 result.Add("error", kwresult.KeywordError);
             }
             //add traceback
-            if (String.IsNullOrEmpty(kwresult.KeywordTraceback))
+            if (string.IsNullOrEmpty(kwresult.KeywordTraceback))
             {
                 result.Add("traceback", "");
             }
@@ -43,7 +43,7 @@ namespace NRobot.Server.Imp.Helpers
                 result.Add("traceback", kwresult.KeywordTraceback);
             }
             //add output
-            if (String.IsNullOrEmpty(kwresult.KeywordOutput))
+            if (string.IsNullOrEmpty(kwresult.KeywordOutput))
             {
                 result.Add("output", "");
             }
@@ -58,6 +58,17 @@ namespace NRobot.Server.Imp.Helpers
                 {
                     //64bit int has to be returned as string
                     result.Add("return", kwresult.KeywordReturn.ToString());
+                }
+                else if (kwresult.KeywordReturn is IDictionary dictionary)
+                {
+                    //XmlRpcStruct is the XML-RPC struct representation for map-like values.
+                    var xmlRpcStruct = new XmlRpcStruct();
+                    foreach (DictionaryEntry entry in dictionary)
+                    {
+                        var key = entry.Key?.ToString() ?? string.Empty;
+                        xmlRpcStruct.Add(key, entry.Value ?? "");
+                    }
+                    result.Add("return", xmlRpcStruct);
                 }
                 else
                 {

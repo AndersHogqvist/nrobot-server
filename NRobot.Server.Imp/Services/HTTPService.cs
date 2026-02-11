@@ -35,7 +35,7 @@ namespace NRobot.Server.Imp.Services
             _port = port;
             //setup http listener
             _listener = new HttpListener();
-            _listener.Prefixes.Add(String.Format("http://*:{0}/", _port));
+            _listener.Prefixes.Add(string.Format("http://*:{0}/", _port));
             _httpthread = null;
         }
 
@@ -44,7 +44,7 @@ namespace NRobot.Server.Imp.Services
         /// </summary>
         private void DoWork_Listener()
         {
-            Log.Debug(String.Format("HTTP Listener started on port {0}", _port));
+            Log.Debug(string.Format("HTTP Listener started on port {0}", _port));
             _listener.Start();
             while (true)
             {
@@ -52,7 +52,7 @@ namespace NRobot.Server.Imp.Services
                 {
                     var reqcontext = _listener.GetContext();
                     var method = reqcontext.Request.HttpMethod;
-                    Log.Debug(String.Format("Received Http request with method {0}", method));
+                    Log.Debug(string.Format("Received Http request with method {0}", method));
                     if (method == "POST")
                     {
                         Task.Factory.StartNew(() => ProcessRequest(reqcontext));
@@ -82,14 +82,14 @@ namespace NRobot.Server.Imp.Services
         /// </summary>
         private void ProcessRequest(HttpListenerContext context)
         {
-            Log.Debug(String.Format("Processing Http request for Url : {0}", context.Request.Url));
+            Log.Debug(string.Format("Processing Http request for Url : {0}", context.Request.Url));
             try
             {
                 _rpcService.ProcessRequest(context);
             }
             catch (Exception e)
             {
-                Log.Error(String.Format("Error processing HTTP request : {0}", e));
+                Log.Error(string.Format("Error processing HTTP request : {0}", e));
                 context.Response.StatusCode = 500;
                 context.Response.Close();
             }
@@ -104,8 +104,7 @@ namespace NRobot.Server.Imp.Services
             {
                 if (IsPortInUse())
                     throw new Exception("Unable to start service, port already in use");
-                _httpthread = new Thread(DoWork_Listener);
-                _httpthread.IsBackground = true;
+                _httpthread = new Thread(DoWork_Listener) { IsBackground = true };
                 _httpthread.Start();
             }
         }
@@ -124,7 +123,7 @@ namespace NRobot.Server.Imp.Services
                 using (
                     var request = new HttpRequestMessage(
                         HttpMethod.Delete,
-                        String.Format("http://127.0.0.1:{0}/", _port)
+                        string.Format("http://127.0.0.1:{0}/", _port)
                     )
                 )
                 using (var response = client.Send(request)) { }
@@ -137,7 +136,7 @@ namespace NRobot.Server.Imp.Services
         /// <summary>
         /// Checks if port is available
         /// </summary>
-        private Boolean IsPortInUse()
+        private bool IsPortInUse()
         {
             bool inUse = false;
             IPGlobalProperties ipProperties = IPGlobalProperties.GetIPGlobalProperties();
@@ -245,9 +244,9 @@ namespace NRobot.Server.Imp.Services
                         var keyword = _keywordManager.GetKeyword(typename, name);
                         var args = keyword.ArgumentNames ?? Array.Empty<string>();
                         var argDocs = keyword.ArgumentDocumentation ?? Array.Empty<string>();
-                        var argsSummary = args.Length > 0 ? String.Join(", ", args) : "None";
+                        var argsSummary = args.Length > 0 ? string.Join(", ", args) : "None";
                         html.Append(
-                            String.Format(
+                            string.Format(
                                 "<tr class=\"kw-row\"><td>{0}</td><td>{1}</td><td>{2}</td></tr>",
                                 HtmlEncode(name),
                                 HtmlEncode(argsSummary),
@@ -266,8 +265,8 @@ namespace NRobot.Server.Imp.Services
                             );
                             for (int i = 0; i < args.Length; i++)
                             {
-                                var doc = i < argDocs.Length ? argDocs[i] : String.Empty;
-                                if (String.IsNullOrWhiteSpace(doc))
+                                var doc = i < argDocs.Length ? argDocs[i] : string.Empty;
+                                if (string.IsNullOrWhiteSpace(doc))
                                     doc = "No description.";
                                 html.Append(
                                     "<tr><td>"
@@ -306,7 +305,7 @@ namespace NRobot.Server.Imp.Services
 
         private static string HtmlEncode(string value)
         {
-            return WebUtility.HtmlEncode(value ?? String.Empty);
+            return WebUtility.HtmlEncode(value ?? string.Empty);
         }
     }
 }

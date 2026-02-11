@@ -20,8 +20,8 @@ namespace NRobot.Server.Imp.Services
         private static readonly ILog Log = LogManager.GetLogger(typeof(XmlRpcService));
 
         //constants
-        private const String CIntro = "__INTRO__";
-        private const String CInit = "__INIT__";
+        private const string CIntro = "__INTRO__";
+        private const string CInit = "__INIT__";
 
         //properties
         private KeywordManager _keywordManager;
@@ -42,11 +42,11 @@ namespace NRobot.Server.Imp.Services
             //record url of request into property
             var id = Thread.CurrentThread.ManagedThreadId;
             var seg = requestContext.Request.Url.Segments;
-            var typeurl = String.Join("", seg, 1, seg.Length - 1).Replace("/", ".");
+            var typeurl = string.Join("", seg, 1, seg.Length - 1).Replace("/", ".");
             if (!_threadkeywordtype.TryAdd(id, typeurl))
             {
                 throw new Exception(
-                    String.Format("Thread id {0} is already processing a request", id)
+                    string.Format("Thread id {0} is already processing a request", id)
                 );
             }
             //process request
@@ -71,7 +71,7 @@ namespace NRobot.Server.Imp.Services
             catch (Exception e)
             {
                 Log.Error(
-                    String.Format("Exception in method - get_keyword_names : {0}", e.Message)
+                    string.Format("Exception in method - get_keyword_names : {0}", e.Message)
                 );
                 throw new XmlRpcFaultException(1, e.Message);
             }
@@ -82,7 +82,7 @@ namespace NRobot.Server.Imp.Services
         /// </summary>
         public XmlRpcStruct run_keyword(string keyword, object[] args)
         {
-            Log.Debug(String.Format("XmlRpc Method call - run_keyword {0}", keyword));
+            Log.Debug(string.Format("XmlRpc Method call - run_keyword {0}", keyword));
             XmlRpcStruct kr = new XmlRpcStruct();
             try
             {
@@ -93,7 +93,7 @@ namespace NRobot.Server.Imp.Services
             }
             catch (Exception e)
             {
-                Log.Error(String.Format("Exception in method - run_keyword : {0}", e));
+                Log.Error(string.Format("Exception in method - run_keyword : {0}", e));
                 throw new XmlRpcFaultException(1, e.Message);
             }
             return kr;
@@ -105,7 +105,7 @@ namespace NRobot.Server.Imp.Services
         public string[] get_keyword_arguments(string friendlyname)
         {
             Log.Debug(
-                String.Format("XmlRpc Method call - get_keyword_arguments {0}", friendlyname)
+                string.Format("XmlRpc Method call - get_keyword_arguments {0}", friendlyname)
             );
             try
             {
@@ -116,7 +116,7 @@ namespace NRobot.Server.Imp.Services
             catch (Exception e)
             {
                 Log.Error(
-                    String.Format("Exception in method - get_keyword_arguments : {0}", e.Message)
+                    string.Format("Exception in method - get_keyword_arguments : {0}", e.Message)
                 );
                 throw new XmlRpcFaultException(1, e.Message);
             }
@@ -131,31 +131,31 @@ namespace NRobot.Server.Imp.Services
         public string get_keyword_documentation(string friendlyname)
         {
             Log.Debug(
-                String.Format("XmlRpc Method call - get_keyword_documentation {0}", friendlyname)
+                string.Format("XmlRpc Method call - get_keyword_documentation {0}", friendlyname)
             );
             try
             {
                 //check for INTRO
-                if (String.Equals(friendlyname, CIntro, StringComparison.CurrentCultureIgnoreCase))
+                if (string.Equals(friendlyname, CIntro, StringComparison.CurrentCultureIgnoreCase))
                 {
-                    return String.Empty;
+                    return string.Empty;
                 }
                 //check for init
-                if (String.Equals(friendlyname, CInit, StringComparison.CurrentCultureIgnoreCase))
+                if (string.Equals(friendlyname, CInit, StringComparison.CurrentCultureIgnoreCase))
                 {
-                    return String.Empty;
+                    return string.Empty;
                 }
                 //get keyword documentation
                 var typename = _threadkeywordtype[Thread.CurrentThread.ManagedThreadId];
                 var keyword = _keywordManager.GetKeyword(typename, friendlyname);
                 var doc = keyword.KeywordDocumentation;
-                Log.Debug(String.Format("Keyword documentation, {0}", doc));
+                Log.Debug(string.Format("Keyword documentation, {0}", doc));
                 return doc;
             }
             catch (Exception e)
             {
                 Log.Error(
-                    String.Format(
+                    string.Format(
                         "Exception in method - get_keyword_documentation : {0}",
                         e.Message
                     )
